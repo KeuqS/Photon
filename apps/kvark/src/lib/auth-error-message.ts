@@ -144,16 +144,16 @@ export function authErrorMessage(
     const code = error?.code?.trim().toUpperCase();
     if (code && code in MESSAGES) return MESSAGES[code];
 
+    if (error?.status === 429) {
+        return MESSAGES.TOO_MANY_ATTEMPTS;
+    }
+
     const message = error?.message?.trim();
     if (message) {
         const known = BY_ENGLISH_MESSAGE[message.toLowerCase()];
         if (known) return known;
         // Our own backend's messages land here, and they are already Norwegian.
         return message;
-    }
-
-    if (error?.status === 429) {
-        return "For mange forsøk. Vent litt og prøv igjen.";
     }
 
     return fallback;
